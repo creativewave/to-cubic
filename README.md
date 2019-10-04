@@ -1,4 +1,6 @@
 
+[![CircleCI](https://circleci.com/gh/creativewave/to-cubic.svg?style=svg)](https://circleci.com/gh/creativewave/to-cubic)
+
 # to-cubic
 
 1. [About](#about)
