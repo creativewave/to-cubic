@@ -47,7 +47,7 @@ All command types are supported – `m`, `l`, `h`, `v`, `s`, `c`, `q`, `t`, `a`,
     ])
 
     // Animate from square to circle in 2s (using the Web Animation API)
-    path.animate({ d: [`path(${from})`, `path(${to})`] }, 2000)
+    path.animate({ d: [`path('${from}')`, `path('${to}')`] }, 2000)
 ```
 
 ## TODO
