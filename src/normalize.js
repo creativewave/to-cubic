@@ -37,8 +37,7 @@ export const normalizePoints = minPoints => definition => {
         drawCommand.points = rest.reduce(
             (groups, group, index) => {
                 if (index % delta === 0 && ((groups.length + Point.c.length + 1) <= minPoints)) {
-                    const clone = { ...group, clone: true }
-                    groups.push(group, clone, clone, clone)
+                    groups.push(group, group, group, group)
                     return groups
                 }
                 groups.push(group)
