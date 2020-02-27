@@ -15,10 +15,12 @@
     "type": "git",
     "url": "git+https://github.com/creativewave/to-cubic.git"
   },
+  "bin": "./bin/index.js",
   "directories": {
     "test": "test"
   },
   "files": [
+    "bin",
     "dist"
   ],
   "type": "module",
