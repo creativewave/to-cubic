@@ -1,9 +1,15 @@
 version: 2
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test-nodejs-lts
+      - test-nodejs-latest
 jobs:
-  build:
+  test-nodejs-lts: &test-template
     working_directory: ~/to-cubic
     docker:
-      - image: node:current
+      - image: node:lts
     steps:
       - checkout
       - run:
@@ -25,3 +31,7 @@ jobs:
           path: test/results.xml
       - store_test_results:
           path: test/results.xml
+  test-nodejs-latest:
+    <<: *test-template
+    docker:
+      - image: node:latest
