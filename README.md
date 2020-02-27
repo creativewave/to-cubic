@@ -9,7 +9,7 @@
 
 ## About
 
-`to-cubic` transforms the `d`efinition of multiple SVG `<path>`s in order that they all uses cubic commands and the same number of commands.
+`to-cubic` transforms the `d`efinition of multiple SVG `<path>`s in order that they all use cubic commands and the same number of commands.
 
 **Demo:** [CodePen](https://codepen.io/creative-wave/pen/qBBWdQO).
 
@@ -25,9 +25,7 @@ This is required to animate between definitions:
 
 This as an alternative to the [GreenSock morphSVG plugin](https://greensock.com/morphSVG), which is not free but has some extra features.
 
-This package doesn't use any external dependency to parse or normalize definitions, like [SVGO](https://github.com/svg/svgo), in order to preserve performances and keep a small file size.
-
-All command types are supported – `m`, `l`, `h`, `v`, `s`, `c`, `q`, `t`, `a`, `z` – either relative (lowercase) or absolute (uppercase). The only rule is that each `<path>` should not include a moving command (`m` or `M`) that is not the first command of the definition.
+All command types are supported – `m`, `l`, `h`, `v`, `s`, `c`, `q`, `t`, `a`, `z` – either relative (lowercase) or absolute (uppercase). The only rule is that a definition should not include a moving command (`m` or `M`) that is not the first command.
 
 ## Installation
 
