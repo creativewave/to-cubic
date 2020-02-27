@@ -37,8 +37,31 @@ All command types are supported – `m`, `l`, `h`, `v`, `s`, `c`, `q`, `t`, `a`,
 
 ## Usage
 
+**With npx (LTS or current NodeJS version):**
+
+```shell
+npx to-cubic <input.(c|m)?js> [output.txt]
+```
+
+Depending on its extension (and/or your `package.json`), the first argument should be a path to an input file that exports your path defintions, either as an ES or a CommonJS module:
+
+```js
+export default ['M...', 'M...']
+// Or (CommonJS): module.exports = ['M...', 'M...']
+```
+
+If the second argument isn't provided, the transformed definitions will be forwarded to the standard output, otherwise they will be saved in the correspond path:
+
+```txt
+M...
+M...
+```
+
+**With import/require:**
+
 ```js
     import toCubic from '@cdoublev/to-cubic'
+    // Or (CommonJS): const toCubic = require('@cdoublev/to-cubic')
 
     const path = document.getElementById('my-path')
     const [from, to] = toCubic([
