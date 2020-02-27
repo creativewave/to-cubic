@@ -1,2 +1,5 @@
 
-module.exports = { extends: ['@cdoublev/eslint-config/node'] }
+module.exports = {
+    env: { jest: true },
+    extends: ['@cdoublev/eslint-config/node'],
+}

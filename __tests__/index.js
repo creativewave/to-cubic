@@ -1,6 +1,5 @@
 
 import normalize, { normalizeCommands } from '../src/normalize'
-import assert from 'assert'
 import { parseDefinition } from '../src/parse'
 import { serializeCommands } from '../src/serialize'
 
@@ -328,77 +327,77 @@ describe('definition#parse()', () => {
         const actual = parseDefinition(commands.L.raw)
         const expected = [commands.L.parsed]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should parse a command type H', () => {
 
         const actual = parseDefinition(commands.H.raw)
         const expected = [commands.H.parsed]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should parse a command type V', () => {
 
         const actual = parseDefinition(commands.V.raw)
         const expected = [commands.V.parsed]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should parse a command type C', () => {
 
         const actual = parseDefinition(commands.C.raw)
         const expected = [commands.C.parsed]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should parse a command type S', () => {
 
         const actual = parseDefinition(commands.S.raw)
         const expected = [commands.S.parsed]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should parse a command type Q', () => {
 
         const actual = parseDefinition(commands.Q.raw)
         const expected = [commands.Q.parsed]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should parse a command type T', () => {
 
         const actual = parseDefinition(commands.T.raw)
         const expected = [commands.T.parsed]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should parse a command type A', () => {
 
         const actual = parseDefinition(commands.A.raw)
         const expected = [commands.A.parsed]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should parse a <path> definition', () => {
 
         const actual = parseDefinition(shapes.clover.raw)
         const expected = shapes.clover.parsed
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should parse a <path> definition with implicit 0 (eg. "1.2.3")', () => {
 
         const actual = parseDefinition('L1.2.3')
         const expected = [{ points: [{ x: '1.2', y: '0.3' }], type: 'L' }]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should parse a <path> definition with multiple consecutive spaces', () => {
 
         const actual = parseDefinition('L0  1  H   1')
         const expected = [{ points: [{ x: '0', y: '1' }], type: 'L' }, { points: [{ x: '1' }], type: 'H' }]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
 })
 
@@ -408,7 +407,7 @@ describe('definition#normalize()', () => {
         const actual = normalizeCommands([commands.M.parsed, commands.L.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.L.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type l -> C', () => {
 
@@ -419,14 +418,14 @@ describe('definition#normalize()', () => {
         ])
         const expected = [commands.M.normalized, commands.L.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type H -> C', () => {
 
         const actual = normalizeCommands([commands.M.parsed, commands.H.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.H.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type h -> C', () => {
 
@@ -437,14 +436,14 @@ describe('definition#normalize()', () => {
         ])
         const expected = [commands.M.normalized, commands.H.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type V -> C', () => {
 
         const actual = normalizeCommands([commands.M.parsed, commands.V.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.V.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type v -> C', () => {
 
@@ -455,7 +454,7 @@ describe('definition#normalize()', () => {
         ])
         const expected = [commands.M.normalized, commands.V.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type c -> C', () => {
 
@@ -476,14 +475,14 @@ describe('definition#normalize()', () => {
         ])
         const expected = [commands.M.normalized, commands.C.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type S -> C', () => {
 
         const actual = normalizeCommands([commands.M.parsed, commands.S.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.S.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type s -> C', () => {
 
@@ -494,14 +493,14 @@ describe('definition#normalize()', () => {
         ])
         const expected = [commands.M.normalized, commands.S.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type Q -> C', () => {
 
         const actual = normalizeCommands([commands.M.parsed, commands.Q.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.Q.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type q -> C', () => {
 
@@ -512,7 +511,7 @@ describe('definition#normalize()', () => {
         ])
         const expected = [commands.M.normalized, commands.Q.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type T -> C', () => {
 
@@ -524,7 +523,7 @@ describe('definition#normalize()', () => {
         ])
         const expected = [commands.M.normalized, commands.T.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type t -> C', () => {
 
@@ -536,14 +535,14 @@ describe('definition#normalize()', () => {
         ])
         const expected = [commands.M.normalized, commands.T.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type A -> C', () => {
 
         const actual = normalizeCommands([commands.M.parsed, commands.A.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.A.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize command type a -> C', () => {
 
@@ -560,31 +559,31 @@ describe('definition#normalize()', () => {
         ])
         const expected = [commands.M.normalized, commands.A.normalized, commands.z.normalized]
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize a <path> definition', () => {
 
         const actual = normalizeCommands(shapes.clover.parsed)
         const expected = shapes.clover.normalized
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize a <path> definition closing with an implicit line command', () => {
 
         const actual = normalizeCommands(shapes.triangle.parsed)
         const expected = shapes.triangle.explicited
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
     it('should normalize a collection of <path> definitions', () => {
 
         const actual = normalize(Object.values(shapes).map(shape => shape.parsed))
 
         Object.keys(shapes).forEach((name, shape) => {
-            assert.deepStrictEqual(actual[shape], shapes[name].normalized)
-            assert.strictEqual(actual[shape][1].points.length, shapes[name].normalized[1].points.length)
+            expect(actual[shape]).toEqual(shapes[name].normalized)
+            expect(actual[shape][1].points.length).toBe(shapes[name].normalized[1].points.length)
         })
-        actual.slice(1).forEach(([, { points }]) => assert.strictEqual(points.length, actual[0][1].points.length))
+        actual.slice(1).forEach(([, { points }]) => expect(points.length).toBe(actual[0][1].points.length))
     })
 })
 
@@ -594,6 +593,6 @@ describe('definition#serialize()', () => {
         const actual = serializeCommands(shapes.clover.normalized)
         const expected = 'M8 5C9.32 4.22 9.3 2.29 7.96 1.54 6.73 0.85 5.2 1.61 5 3 5 1.46 3.33 0.5 2 1.27 0.67 2.04 0.67 3.96 2 4.73 2.3 4.91 2.65 5 3 5 0.82 4.23-1.37 6.11-0.94 8.38-0.52 10.65 2.21 11.61 3.96 10.11 4.58 9.58 4.95 8.81 5 8 6.15 9.15 8.13 8.63 8.55 7.05 8.75 6.32 8.54 5.54 8 5z'
 
-        assert.deepStrictEqual(actual, expected)
+        expect(actual).toEqual(expected)
     })
 })
