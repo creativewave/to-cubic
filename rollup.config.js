@@ -48,7 +48,7 @@ export default [
             nodeResolve(),
             commonjs(),
             terser(),
-            babel(getBabelConfig()),
+            babel(getBabelConfig('defaults')),
         ],
     },
 ]
