@@ -1,13 +1,17 @@
 
+// eslint-disable-next-line node/no-extraneous-import
+import { describe, expect, it } from '@jest/globals'
 import normalize, { normalizeCommands } from '../src/normalize'
 import { parseDefinition } from '../src/parse'
 import { serializeCommands } from '../src/serialize'
 
-// Debug all command types with:
-// <svg viewBox="0 0 4 4">
-//   <path d="M0 2 <initial-type> <...initial-points> z" fill="#ff000033" />
-//   <path d="M0 2 C <...normalized-points> z"           fill="#ff000033" />
-// </svg>
+/**
+ * Debug all command types with:
+ * <svg viewBox="0 0 4 4">
+ *   <path d="M0 2 <initial-type> <...initial-points> z" fill="#ff000033" />
+ *   <path d="M0 2 C <...normalized-points> z"           fill="#ff000033" />
+ * </svg>
+ */
 
 /* eslint-disable array-element-newline */
 const commands = {
