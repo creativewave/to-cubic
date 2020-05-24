@@ -136,8 +136,10 @@ const getCubicFromArc = ({ x: x1, y: y1 }, { angle, fA, fS, recursive, rx, ry, x
         const x = (x1p - x2) / 2
         const y = (y1p - y2) / 2
 
-        // Step 2: compute (cx′, cy′)
-        // Step 3: Compute (cx, cy) from (cx′, cy′)
+        /**
+         * Step 2: compute (cx′, cy′)
+         * Step 3: Compute (cx, cy) from (cx′, cy′)
+         */
         let h = ((x * x) / (rx * rx)) + ((y * y) / (ry * ry))
         if (h > 1) {
             h = Math.sqrt(h)
@@ -149,8 +151,10 @@ const getCubicFromArc = ({ x: x1, y: y1 }, { angle, fA, fS, recursive, rx, ry, x
         const ry2 = ry * ry
         const k = (fA == fS ? -1 : 1)
                 * Math.sqrt(Math.abs(((rx2 * ry2) - (rx2 * y * y) - (ry2 * x * x)) / ((rx2 * y * y) + (ry2 * x * x))))
-        // (cos φ - sin φ) . (cxp) + ((x1 + x2) / 2)
-        // (cos φ - sin φ) . (cyp) + ((y1 + y2) / 2)
+        /**
+         * (cos φ - sin φ) . (cxp) + ((x1 + x2) / 2)
+         * (cos φ - sin φ) . (cyp) + ((y1 + y2) / 2)
+         */
         cx = (k * rx * y / ry) + ((x1 + x2) / 2)
         cy = (k * -ry * x / rx) + ((y1 + y2) / 2)
 
