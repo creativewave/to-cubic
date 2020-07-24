@@ -211,7 +211,7 @@ export const normalizeCommands = ([startCommand, ...drawCommands]) => {
         drawCommands.push({ points: [], type: 'z' })
     }
 
-    const drawPoints = drawCommands.slice(0, drawCommands.length - 1).reduce(normalizeCommand(startPoint), [])
+    const drawPoints = drawCommands.slice(0, -1).reduce(normalizeCommand(startPoint), [])
     const lastPoint = last(drawPoints)
 
     if (lastPoint.x !== startPoint.x || lastPoint.y !== startPoint.y) {
