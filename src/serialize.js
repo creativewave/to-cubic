@@ -8,7 +8,7 @@
  * Group => { [Parameter]: Number }
  */
 export const serializeCommands = commands => commands
-    .slice(0, commands.length - 1)
+    .slice(0, -1)
     .reduce((d, { type, points }) => {
         const firstPoint = `${points[0].x}${points[0].y < 0 ? '' : ' '}${points[0].y}`
         return `${d}${type}${points.slice(1).reduce(
