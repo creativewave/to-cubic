@@ -585,9 +585,9 @@ describe('definition#normalize()', () => {
 
         Object.keys(shapes).forEach((name, shape) => {
             expect(actual[shape]).toEqual(shapes[name].normalized)
-            expect(actual[shape][1].points.length).toBe(shapes[name].normalized[1].points.length)
+            expect(actual[shape][1].points).toHaveLength(shapes[name].normalized[1].points.length)
         })
-        actual.slice(1).forEach(([, { points }]) => expect(points.length).toBe(actual[0][1].points.length))
+        actual.slice(1).forEach(([, { points }]) => expect(points).toHaveLength(actual[0][1].points.length))
     })
 })
 
