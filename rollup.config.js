@@ -41,7 +41,7 @@ export default [
         input: 'src/index.js',
         output: {
             file: pkg.unpkg,
-            format: 'iife',
+            format: 'umd',
             name: 'toCubic',
         },
         plugins: [
