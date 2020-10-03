@@ -19,7 +19,7 @@ export const parseDefinition = definition => {
     return [...definition].reduce(
         (commands, char) => {
             // Breaking char
-            if (/[ ,\n\r\t]/i.test(char)) {
+            if (/[,\n\r\s\t]/i.test(char)) {
                 hasBreak = true
                 return commands
             }
