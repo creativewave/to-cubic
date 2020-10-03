@@ -29,51 +29,42 @@ export const parseDefinition = definition => {
                 return commands
             }
             const command = last(commands)
-            const commandType = command.type.toLowerCase()
             const group = last(command.points)
             const Params = Group[command.type.toLowerCase()]
-            const { currentParam, fixedChar, isNewGroupChar, isNewParamChar, nextParam } = Maybe(group)
+            const { currentParam, isNewGroupChar, isNewParamChar, nextParam } = Maybe(group)
                 .map(group => {
                     const currentParamsLength = Object.keys(group).length
                     const currentParamIndex = currentParamsLength - 1
-                    const [isNewParamChar, fixedChar] = [char].map(char => {
-                        switch (char) {
-                            case '-':
-                                return [true, '-']
-                            case '.':
-                                // Check for implicit decimal number such as in "1.5.3"
-                                return group[Params[currentParamIndex]].includes('.')
-                                    ? [true, '0.']
-                                    : [hasBreak, char]
-                            case '0':
-                            case '1':
-                                // Check for "glued" arc flags such as in "A 0 5 0 01 10 5"
-                                return [
-                                    (commandType && (currentParamIndex === 3 || currentParamIndex === 4)) || hasBreak,
-                                    char,
-                                    ]
-                            default:
-                                return [hasBreak, char]
-                        }
-                    }).flat()
+                    let isNewParamChar = hasBreak
+                    if (char === '-') {
+                        isNewParamChar = true
+                    } else if (char === '.' && group[Params[currentParamIndex]].includes('.')) {
+                        isNewParamChar = true
+                        char = '0.'
+                    } else if (
+                        command.type.toLowerCase() === 'a'
+                        && (char === '0' || char === '1')
+                        && (currentParamIndex === 3 || currentParamIndex === 4)) {
+                        isNewParamChar = true
+                    }
                     return {
+                        char,
                         currentParam: Params[currentParamIndex],
-                        fixedChar,
-                        isNewGroupChar: isNewParamChar && currentParamsLength % Params.length === 0,
+                        isNewGroupChar: isNewParamChar && ((currentParamsLength % Params.length) === 0),
                         isNewParamChar,
                         nextParam: Params[currentParamIndex + 1],
                     }
                 })
-                .getOrElse({ currentParam: Params[0], fixedChar: char, isNewGroupChar: true, isNewParamChar: false })
+                .getOrElse({ currentParam: Params[0], isNewGroupChar: true, isNewParamChar: false })
             hasBreak = false
             // New group (set char as the first character of the first parameter of a new group)
             if (isNewGroupChar) {
-                command.points.push({ [Params[0]]: fixedChar })
+                command.points.push({ [Params[0]]: char })
                 return commands
             }
             // New parameter (set char as the first character of the next parameter of the current group)
             if (isNewParamChar) {
-                group[nextParam] = fixedChar
+                group[nextParam] = char
                 return commands
             }
             // New character (concat the next character of the current parameter of the current group)
