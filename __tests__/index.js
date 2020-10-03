@@ -32,7 +32,7 @@ const commands = {
             ],
             type: 'A',
         },
-        raw: 'A2 2 0 1 0 4 2 2 2 0 1 0 0 2',
+        raw: 'A2 2 0 10 4 2 2 2 0 1 0 0 2',
     },
     C: {
         normalized: {
