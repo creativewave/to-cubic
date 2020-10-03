@@ -46,9 +46,9 @@ export default [
         },
         plugins: [
             nodeResolve(),
+            babel(getBabelConfig('defaults')),
             commonjs(),
             terser(),
-            babel(getBabelConfig('defaults')),
         ],
     },
 ]
