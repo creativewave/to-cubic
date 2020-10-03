@@ -5,8 +5,8 @@ import commonjs from '@rollup/plugin-commonjs'
 import pkg from './package.json'
 import { terser } from 'rollup-plugin-terser'
 
-const { dependencies = {}, peerDependencies = {} } = pkg
-const external = id => (new RegExp(`^(${Object.keys({ ...dependencies, ...peerDependencies }).join('|')})`)).test(id)
+const externalRegexp = new RegExp(`^(${Object.keys(pkg.dependencies).join('|')})`)
+const external = id => externalRegexp.test(id)
 
 const getBabelConfig = targets => ({
     exclude: /node_modules/,
