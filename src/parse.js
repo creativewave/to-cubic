@@ -29,6 +29,7 @@ export const parseDefinition = definition => {
                 return commands
             }
             const command = last(commands)
+            const commandType = command.type.toLowerCase()
             const group = last(command.points)
             const Params = Group[command.type.toLowerCase()]
             const { currentParam, fixedChar, isNewGroupChar, isNewParamChar, nextParam } = Maybe(group)
@@ -44,6 +45,13 @@ export const parseDefinition = definition => {
                                 return group[Params[currentParamIndex]].includes('.')
                                     ? [true, '0.']
                                     : [hasBreak, char]
+                            case '0':
+                            case '1':
+                                // Check for "glued" arc flags such as in "A 0 5 0 01 10 5"
+                                return [
+                                    (commandType && (currentParamIndex === 3 || currentParamIndex === 4)) || hasBreak,
+                                    char,
+                                    ]
                             default:
                                 return [hasBreak, char]
                         }
