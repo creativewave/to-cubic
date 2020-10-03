@@ -1,4 +1,5 @@
 
-module.exports = process.env.NODE_ENV === 'test'
-    ? { presets: [['@babel/preset-env', { targets: { node: 'current' } }]] }
-    : { /* See rollup.config.js */ }
+module.exports = {
+    exclude: /node_modules/,
+    presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
+}
