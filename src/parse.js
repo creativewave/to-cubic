@@ -1,15 +1,14 @@
 
-import { Group } from './types'
 import Maybe from './lib/Maybe'
+import { Point } from './types'
 import last from './lib/last'
 
 /**
  * parseDefinition :: String -> Definition
  *
  * Definition => [Command]
- * Command => { type: String, points: [...Point] }
- * Point => [Group]
- * Group => { [Parameter]: String }
+ * Command => { type: String, points: [Point] }
+ * Point => { [Parameter]: String }
  *
  * It should return a collection of `Command`s given a `String` representing the
  * `d`efinition attribute of an SVG `<path>`.
@@ -29,16 +28,16 @@ export const parseDefinition = definition => {
                 return commands
             }
             const command = last(commands)
-            const group = last(command.points)
-            const Params = Group[command.type.toLowerCase()]
-            const { currentParam, isNewGroupChar, isNewParamChar, nextParam } = Maybe(group)
-                .map(group => {
-                    const currentParamsLength = Object.keys(group).length
+            const point = last(command.points)
+            const Params = Point[command.type.toLowerCase()]
+            const { currentParam, isNewParamChar, isNewSegmentChar, nextParam } = Maybe(point)
+                .map(point => {
+                    const currentParamsLength = Object.keys(point).length
                     const currentParamIndex = currentParamsLength - 1
                     let isNewParamChar = hasBreak
                     if (char === '-') {
                         isNewParamChar = true
-                    } else if (char === '.' && group[Params[currentParamIndex]].includes('.')) {
+                    } else if (char === '.' && point[Params[currentParamIndex]].includes('.')) {
                         isNewParamChar = true
                         char = '0.'
                     } else if (
@@ -50,25 +49,25 @@ export const parseDefinition = definition => {
                     return {
                         char,
                         currentParam: Params[currentParamIndex],
-                        isNewGroupChar: isNewParamChar && ((currentParamsLength % Params.length) === 0),
                         isNewParamChar,
+                        isNewSegmentChar: isNewParamChar && ((currentParamsLength % Params.length) === 0),
                         nextParam: Params[currentParamIndex + 1],
                     }
                 })
-                .getOrElse({ currentParam: Params[0], isNewGroupChar: true, isNewParamChar: false })
+                .getOrElse({ currentParam: Params[0], isNewParamChar: false, isNewSegmentChar: true })
             hasBreak = false
-            // New group (set char as the first character of the first parameter of a new group)
-            if (isNewGroupChar) {
+            // New segment (set char as the first character of the first parameter of a new point)
+            if (isNewSegmentChar) {
                 command.points.push({ [Params[0]]: char })
                 return commands
             }
-            // New parameter (set char as the first character of the next parameter of the current group)
+            // New parameter (set char as the first character of a new parameter in the current point)
             if (isNewParamChar) {
-                group[nextParam] = char
+                point[nextParam] = char
                 return commands
             }
-            // New character (concat the next character of the current parameter of the current group)
-            group[currentParam] += char
+            // New character (concat char to the current parameter of the current point)
+            point[currentParam] += char
             return commands
         },
         [])

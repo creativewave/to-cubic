@@ -28,16 +28,12 @@ const rotateX = (x, y, phi) => (x * Math.cos(phi)) - (y * Math.sin(phi))
 const rotateY = (x, y, phi) => (x * Math.sin(phi)) + (y * Math.cos(phi))
 
 /**
- * getCubicFromArc :: Group -> [ArcPoint] -> [...Point]
+ * getCubicFromArc :: Point -> Point -> [Point]
  *
- * ArcPoint :: { [EndpointParameterName]: Number }
- * Point => [Group]
- * Group => { [Parameter]: Number }
+ * Point => { [Parameter]: Number }
  *
- * It should return the `Point`s of a `C`ubic `Command` given the previous end
- * position, ie. the previous `Group` of `Parameters`, aka. the start point, and
- * a collection of `ArcPoint`s, ie. the `Point`s of the current `A`rc `Command`
- * to draw. Those `Point`s have the following `Parameters`:
+ * It should return the `Point`s of a `C`ubic `Command` given a start `Point`
+ * and the arc `Point` to draw.
  *
  * - `x1`, `y1`: the the start point
  * - `x2`, `y2`: the end position

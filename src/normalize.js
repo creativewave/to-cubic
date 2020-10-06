@@ -1,6 +1,6 @@
 
 import Maybe from './lib/Maybe'
-import { Point } from './types'
+import { Segment } from './types'
 import getCubicFromArc from './lib/getCubicFromArc'
 import last from './lib/last'
 import mapValues from './lib/mapValues'
@@ -9,9 +9,8 @@ import mapValues from './lib/mapValues'
  * normalizePoints :: Number -> Definition -> Definition
  *
  * Definition => [Command]
- * Command => { type: String, points: [...Point] }
- * Point => [Group]
- * Group => { [Parameter]: Number }
+ * Command => { type: String, points: [Point] }
+ * Point => { [Parameter]: Number }
  *
  * It should return a `Definition` with a total of `Point`s equal to the given
  * `Number` for its second `Command`, by adding (cloning its) `Point`s.
@@ -31,17 +30,17 @@ export const normalizePoints = minPoints => definition => {
     while (drawCommand.points.length < minPoints) {
 
         const clones = minPoints - drawCommand.points.length
-        const delta = Math.ceil(drawCommand.points.length / clones) * Point.c.length || Point.c.length
+        const delta = Math.ceil(drawCommand.points.length / clones) * Segment.c.length || Segment.c.length
         const [startControl, endControl, ...rest] = drawCommand.points
 
         drawCommand.points = rest.reduce(
-            (groups, group, index) => {
-                if (index % delta === 0 && ((groups.length + Point.c.length + 1) <= minPoints)) {
-                    groups.push(group, group, group, group)
-                    return groups
+            (points, point, index) => {
+                if (index % delta === 0 && ((points.length + Segment.c.length + 1) <= minPoints)) {
+                    points.push(point, point, point, point)
+                    return points
                 }
-                groups.push(group)
-                return groups
+                points.push(point)
+                return points
             },
             [startControl, endControl])
     }
@@ -53,9 +52,8 @@ export const normalizePoints = minPoints => definition => {
  * normalizeCommand :: Group -> [...Point] -> Command -> [...Point]
  *
  * Definition => [Command]
- * Command => { type: String, points: [...Point] }
- * Point => [Group]
- * Group => { [Parameter]: Number }
+ * Command => { type: String, points: [Point] }
+ * Point => { [Parameter]: Number }
  *
  * It should transform each `Point` from a `Command` of any type to a `C`ubic`
  * `Command` `Point`.
@@ -73,13 +71,13 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
     }
 
     const type = command.type.toLowerCase()
-    const GroupsLength = Point[type].length
+    const SegmentLength = Segment[type].length
 
     for (let pointIndex = 0; pointIndex < command.points.length; pointIndex++) {
 
-        // (x, y) Last end position parameters aka. start point parameters (from current, previous, or start command)
+        // Last end position point (x, y)
         const { x, y } =  last(points) || startPoint
-        // (x2, y2) Last end control parameters (from current, previous, or last command)
+        // Last end control point (x2, y2)
         const startControl = Maybe(points[points.length - 2])
             .orElse(() => Maybe(commands[commandIndex - 1])
                 .chain(({ type: previousType }) => {
@@ -102,67 +100,67 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
             .map(({ x: x2, y: y2 }) => ({ x: (x * 2) - x2, y: (y * 2) - y2 }))
             .getOrElse({ x, y })
 
-        // First group of parameters of the current command
-        const group = mapValues(command.points[pointIndex], Number)
-        // Last group of parameters (end position) of the current command
-        const position = mapValues(command.points[pointIndex + GroupsLength - 1], Number)
+        // (First) point of the current command
+        const point = mapValues(command.points[pointIndex], Number)
+        // (End) point of the current command
+        const position = mapValues(command.points[pointIndex + SegmentLength - 1], Number)
 
         switch (command.type) {
             case 'A':
-                points.push(...getCubicFromArc({ x, y }, group))
+                points.push(...getCubicFromArc({ x, y }, point))
                 break
             case 'a':
-                points.push(...getCubicFromArc({ x, y }, { ...group, x: group.x + x, y: group.y + y }))
+                points.push(...getCubicFromArc({ x, y }, { ...point, x: point.x + x, y: point.y + y }))
                 break
             case 'c':
                 points.push(...[
-                    group,
+                    point,
                     mapValues(command.points[pointIndex + 1], Number),
                     position,
                 ].map(p => ({ x: p.x + x, y: p.y + y })))
                 break
             case 'L':
-                points.push({ x, y }, group, position)
+                points.push({ x, y }, point, position)
                 break
             case 'l':
-                points.push({ x, y }, ...[group, position].map(p => ({ x: p.x + x, y: p.y + y })))
+                points.push({ x, y }, ...[point, position].map(p => ({ x: p.x + x, y: p.y + y })))
                 break
             case 'H':
-                points.push({ x, y }, { ...group, y }, { ...position, y })
+                points.push({ x, y }, { ...point, y }, { ...position, y })
                 break
             case 'h':
-                points.push({ x, y }, { x: group.x + x, y }, { x: position.x + x, y })
+                points.push({ x, y }, { x: point.x + x, y }, { x: position.x + x, y })
                 break
             case 'Q':
                 points.push(
-                    { x: x + (2 / 3 * (group.x - x)), y: y + (2 / 3 * (group.y - y)) },
-                    { x: position.x + (2 / 3 * (group.x - position.x)), y: position.y + (2 / 3 * (group.y - position.y)) },
+                    { x: x + (2 / 3 * (point.x - x)), y: y + (2 / 3 * (point.y - y)) },
+                    { x: position.x + (2 / 3 * (point.x - position.x)), y: position.y + (2 / 3 * (point.y - position.y)) },
                     position)
                 break
             case 'q':
                 points.push(
-                    { x: x + (2 / 3 * group.x), y: y + (2 / 3 * group.y) },
-                    { x: position.x + x + (2 / 3 * (group.x - position.x)), y: position.y + (y + (2 / 3 * (group.y - position.y))) },
+                    { x: x + (2 / 3 * point.x), y: y + (2 / 3 * point.y) },
+                    { x: position.x + x + (2 / 3 * (point.x - position.x)), y: position.y + (y + (2 / 3 * (point.y - position.y))) },
                     { x: position.x + x, y: position.y + y })
                 break
             case 'V':
-                points.push({ x, y }, { ...group, x }, { ...position, x })
+                points.push({ x, y }, { ...point, x }, { ...position, x })
                 break
             case 'v':
-                points.push({ x, y }, { x, y: group.y + y }, { x, y: position.y + y })
+                points.push({ x, y }, { x, y: point.y + y }, { x, y: position.y + y })
                 break
             case 'S':
-                points.push(startControl, group, position)
+                points.push(startControl, point, position)
                 break
             case 's':
-                points.push(startControl, ...[group, position].map(p => ({ x: p.x + x, y: p.y + y })))
+                points.push(startControl, ...[point, position].map(p => ({ x: p.x + x, y: p.y + y })))
                 break
             case 'T':
                 points.push(
                     startControl,
                     {
-                        x: group.x > x ? group.x + (x - startControl.x) : group.x - (x - startControl.x),
-                        y: group.y > y ? group.y + (y - startControl.y) : group.y - (y - startControl.y),
+                        x: point.x > x ? point.x + (x - startControl.x) : point.x - (x - startControl.x),
+                        y: point.y > y ? point.y + (y - startControl.y) : point.y - (y - startControl.y),
                     },
                     position)
                 break
@@ -170,13 +168,13 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
                 points.push(
                     startControl,
                     {
-                        x: group.x + x > x ? group.x + x + (x - startControl.x) : group.x + x - (x - startControl.x),
-                        y: group.y + y > y ? group.y + y + (y - startControl.y) : group.y + y - (y - startControl.y),
+                        x: point.x + x > x ? point.x + x + (x - startControl.x) : point.x + x - (x - startControl.x),
+                        y: point.y + y > y ? point.y + y + (y - startControl.y) : point.y + y - (y - startControl.y),
                     },
                     { x: position.x + x, y: position.y + y })
                 break
         }
-        pointIndex += GroupsLength - 1
+        pointIndex += SegmentLength - 1
         continue
     }
 
@@ -187,9 +185,8 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
  * normalizeCommands :: Definition -> Definition
  *
  * Definition => [Command]
- * Command => { type: String, points: [...Point] }
- * Point => [Group]
- * Group => { [Parameter]: Number }
+ * Command => { type: String, points: [Point] }
+ * Point => { [Parameter]: Number }
  *
  * It should return a `Definition` containing its first `Command` (type `M`), a
  * `C`ubic `Command` resulting from the transformation of its initial drawing
@@ -227,9 +224,8 @@ export const normalizeCommands = ([startCommand, ...drawCommands]) => {
  * normalize :: [Definition] -> [Definition]
  *
  * Definition => [Command]
- * Command => { type: String, points: [...Point] }
- * Point => [Group]
- * Group => { [Parameter]: String }
+ * Command => { type: String, points: [Point] }
+ * Point => { [Parameter]: String }
  *
  * It should return a collection of `Definition`s with the same `Point`s count.
  * It should return a collection of `Definition`s with the same `Command` type

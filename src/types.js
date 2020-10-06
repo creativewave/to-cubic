@@ -1,8 +1,8 @@
 
 /**
- * Group[Type] => [Parameter]
+ * Point[Type] => [Parameter]
  */
-export const Group = {
+export const Point = {
     a: ['rx', 'ry', 'angle', 'fA', 'fS', 'x', 'y'],
     c: ['x', 'y'],
     h: ['x'],
@@ -16,9 +16,9 @@ export const Group = {
 }
 
 /**
- * Point[Type] => [Group]
+ * Segment[Type] => ...Point
  */
-export const Point = {
+export const Segment = {
     a: ['arc'],
     c: ['start control', 'end control', 'end position'],
     h: ['horizontal translation'],

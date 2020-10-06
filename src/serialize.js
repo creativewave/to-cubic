@@ -3,9 +3,8 @@
  * serializeCommand :: Definition -> String
  *
  * Definition => [Command]
- * Command => { type: String, points: [...Point] }
- * Point => [Group]
- * Group => { [Parameter]: Number }
+ * Command => { type: String, points: [Point] }
+ * Point => { [Parameter]: Number }
  */
 export const serializeCommands = commands => commands
     .slice(0, -1)
