@@ -73,15 +73,14 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
     }
 
     const type = command.type.toLowerCase()
-    const groups = []
     const GroupsLength = Point[type].length
 
     for (let pointIndex = 0; pointIndex < command.points.length; pointIndex++) {
 
         // (x, y) Last end position parameters aka. start point parameters (from current, previous, or start command)
-        const { x, y } =  Maybe(last(groups)).orElse(() => Maybe(last(points))).getOrElse(startPoint)
+        const { x, y } =  last(points) || startPoint
         // (x2, y2) Last end control parameters (from current, previous, or last command)
-        const startControl = Maybe(groups[groups.length - 2])
+        const startControl = Maybe(points[points.length - 2])
             .orElse(() => Maybe(commands[commandIndex - 1])
                 .chain(({ type: previousType }) => {
                     // See ./README.md for the special case handled here.
@@ -110,56 +109,56 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
 
         switch (command.type) {
             case 'A':
-                groups.push(...getCubicFromArc({ x, y }, group))
+                points.push(...getCubicFromArc({ x, y }, group))
                 break
             case 'a':
-                groups.push(...getCubicFromArc({ x, y }, { ...group, x: group.x + x, y: group.y + y }))
+                points.push(...getCubicFromArc({ x, y }, { ...group, x: group.x + x, y: group.y + y }))
                 break
             case 'c':
-                groups.push(...[
+                points.push(...[
                     group,
                     mapValues(command.points[pointIndex + 1], Number),
                     position,
                 ].map(p => ({ x: p.x + x, y: p.y + y })))
                 break
             case 'L':
-                groups.push({ x, y }, group, position)
+                points.push({ x, y }, group, position)
                 break
             case 'l':
-                groups.push({ x, y }, ...[group, position].map(p => ({ x: p.x + x, y: p.y + y })))
+                points.push({ x, y }, ...[group, position].map(p => ({ x: p.x + x, y: p.y + y })))
                 break
             case 'H':
-                groups.push({ x, y }, { ...group, y }, { ...position, y })
+                points.push({ x, y }, { ...group, y }, { ...position, y })
                 break
             case 'h':
-                groups.push({ x, y }, { x: group.x + x, y }, { x: position.x + x, y })
+                points.push({ x, y }, { x: group.x + x, y }, { x: position.x + x, y })
                 break
             case 'Q':
-                groups.push(
+                points.push(
                     { x: x + (2 / 3 * (group.x - x)), y: y + (2 / 3 * (group.y - y)) },
                     { x: position.x + (2 / 3 * (group.x - position.x)), y: position.y + (2 / 3 * (group.y - position.y)) },
                     position)
                 break
             case 'q':
-                groups.push(
+                points.push(
                     { x: x + (2 / 3 * group.x), y: y + (2 / 3 * group.y) },
                     { x: position.x + x + (2 / 3 * (group.x - position.x)), y: position.y + (y + (2 / 3 * (group.y - position.y))) },
                     { x: position.x + x, y: position.y + y })
                 break
             case 'V':
-                groups.push({ x, y }, { ...group, x }, { ...position, x })
+                points.push({ x, y }, { ...group, x }, { ...position, x })
                 break
             case 'v':
-                groups.push({ x, y }, { x, y: group.y + y }, { x, y: position.y + y })
+                points.push({ x, y }, { x, y: group.y + y }, { x, y: position.y + y })
                 break
             case 'S':
-                groups.push(startControl, group, position)
+                points.push(startControl, group, position)
                 break
             case 's':
-                groups.push(startControl, ...[group, position].map(p => ({ x: p.x + x, y: p.y + y })))
+                points.push(startControl, ...[group, position].map(p => ({ x: p.x + x, y: p.y + y })))
                 break
             case 'T':
-                groups.push(
+                points.push(
                     startControl,
                     {
                         x: group.x > x ? group.x + (x - startControl.x) : group.x - (x - startControl.x),
@@ -168,7 +167,7 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
                     position)
                 break
             case 't':
-                groups.push(
+                points.push(
                     startControl,
                     {
                         x: group.x + x > x ? group.x + x + (x - startControl.x) : group.x + x - (x - startControl.x),
@@ -180,7 +179,6 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
         pointIndex += GroupsLength - 1
         continue
     }
-    points.push(...groups)
 
     return points
 }
