@@ -55,13 +55,10 @@ export const normalizePoints = minPoints => definition => {
  * Command => { type: String, points: [Point] }
  * Point => { [Parameter]: Number }
  *
- * It should transform each `Point` from a `Command` of any type to a `C`ubic`
+ * It should transform each `Point` from a `Command` of any type to a `C`ubic
  * `Command` `Point`.
  *
- * Memo: specification for each transformation by `Command` type are described
- * in ./README.md.
- *
- * TODO(refactoring): with fresh eyes...
+ * Memo: each transformation are specified in ./README.md by `Command` type.
  */
 export const normalizeCommand = startPoint => (points, command, commandIndex, commands) => {
 
@@ -192,9 +189,7 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
  * `C`ubic `Command` resulting from the transformation of its initial drawing
  * `Command`s (of any type), and a `Command` with a type `z`.
  *
- * It should append a `Command` with type `z` as a last `Command` when missing.
- *
- * It should append any line `Command` that is implicitly closing the path, ie:
+ * It should append any line `Command` implicitly closing the path, eg.:
  *   M 0 0, H 1, V 1, z  ->  M 0 0, H 1, V 1, L 0 0, z
  */
 export const normalizeCommands = ([startCommand, ...drawCommands]) => {
@@ -227,7 +222,7 @@ export const normalizeCommands = ([startCommand, ...drawCommands]) => {
  * Command => { type: String, points: [Point] }
  * Point => { [Parameter]: String }
  *
- * It should return a collection of `Definition`s with the same `Point`s count.
+ * It should return a collection of `Definition`s with the same `Point` counts.
  * It should return a collection of `Definition`s with the same `Command` type
  * at respective indexes.
  *
@@ -236,11 +231,11 @@ export const normalizeCommands = ([startCommand, ...drawCommands]) => {
  *
  * Memo: the most efficient way to fullfill those requirements is to normalize
  * each `Command` to a single `C`ubic `Command` first (except the last and first
- * `Command`), then normalize each `Definition` to have the same `Point`s count,
- * and GreenSock seems to apply the same steps: https://greensock.com/morphSVG
+ * `Command`), then normalize each `Definition` to get the same `Point`s count,
+ * which is the method followed by GreenSock morphSVG (https://greensock.com/).
  */
 const normalize = definitions => {
-    // Step 1 (normalize commands types) + find max total of points (step 2)
+    // Step 1 (normalize types) + find max point counts (step 2)
     const { definitions: normalized, minPoints } = definitions.reduce(
         ({ definitions, minPoints }, definition) => {
             const normalized = normalizeCommands(definition)
@@ -251,7 +246,7 @@ const normalize = definitions => {
             return { definitions, minPoints }
         },
         { definitions: [], minPoints: 0 })
-    // Step 2 (normalize total of points)
+    // Step 2 (normalize point counts)
     return normalized.map(normalizePoints(minPoints))
 }
 

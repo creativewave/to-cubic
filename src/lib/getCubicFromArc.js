@@ -35,13 +35,14 @@ const rotateY = (x, y, phi) => (x * Math.sin(phi)) + (y * Math.cos(phi))
  * It should return the `Point`s of a `C`ubic `Command` given a start `Point`
  * and the arc `Point` to draw.
  *
- * - `x1`, `y1`: the the start point
- * - `x2`, `y2`: the end position
- * - `rx`, `ry`: the radii of the arc (ellipse)
+ * Start `Point` `Parameter`s correspond to `x1` and `y1`.
+ *
+ * Arc `Point` `Parameters` corresponds to:
+ * - `x2`, `y2`: end position
+ * - `rx`, `ry`: radii of the arc (ellipse)
  * - `largeArcFlag` (fA): `1` to draw an arc whose angle is `<= 180`, or `0`
  * - `sweepFlag` (fS): `1` to draw an arc by rotating clockwise, or `0`
- * - `angle`: the value in degrees used to distort the arc by rotating then
- * stretching it
+ * - `angle`: value in degrees used to distort the arc (rotation + stretch)
  *
  * Specification: https://www.w3.org/TR/SVG11/implnote.html#ArcSyntax
  *
@@ -64,8 +65,8 @@ const rotateY = (x, y, phi) => (x * Math.sin(phi)) + (y * Math.cos(phi))
  * - https://mortoray.com/2017/02/16/rendering-an-svg-elliptical-arc-as-bezier-curves/ (k === ?)
  *
  * The latter is based on notes from the specification about a "Conversion from
- * endpoint to center parameterization" (explained below), which are followed by
- * all of the following libraries/modules:
+ * endpoint to center parameterization" (explained below), followed by all the
+ * following libraries/modules:
  *
  * SVGO: https://github.com/svg/svgo/blob/master/plugins/_path.js#L904
  * Last meaningfull update: never (created on 20141101)

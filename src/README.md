@@ -4,19 +4,25 @@
 
 # Types and terminology
 
-**Command:** a definition of a movement on the SVG canvas.
+`Command => { type: String, points: [Point] }`
+`Point => { [Parameter]: Number }`
+`Segment => ...Point`
 
-**Command type:** a letter for the movement type, eg. `m`oving without drawing anything, drawing a `l`ine or a `c`urve, or closing the path with `z`.
+Note: `Segment` is not a concrete sequence type like `[Point]`, ie. it is only a conceptual type.
 
-**Command point:** a map of parameters, eg. `{ x: Number, y: Number }`.
+**Command:** a definition of movement(s) on the SVG canvas.
+
+**Command type:** a letter for the command type, eg. `m`oving at a position, drawing a `l`ine or a `c`urve, or closing the path with `z`.
 
 **Command segment:** a sequence of command points describing a single movement to an end point.
+
+**Command point:** a map of parameters, eg. `{ x: Number, y: Number }`.
 
 # Transforming a command segment to a cubic command segment
 
 Below is a list of `Segment` definitions sorted by `Command` type.
 
-Note: for clarity purpose, the type `Parameter => { a }` is replaced with `Parameter => [a]`.
+Note: for clarity purpose, the type of a `Point` is replaced with `Point => [Number]`.
 
 | Type  | Segment                            |
 | ----- | ---------------------------------- |
@@ -38,7 +44,7 @@ Note: for clarity purpose, the type `Parameter => { a }` is replaced with `Param
 
 Below is a list of transformations for each `Segment` by command type.
 
-For clarity purpose, `P`revious is an alias to the previous segment whose type is `Segment => [x1, y1], [x2, y2], [x, y]`, where:
+For clarity purpose, `P`revious is an alias to the previous segment whose conceptual type is `Segment => [x1, y1], [x2, y2], [x, y]`, where:
 
 - `[x2, y2]` is the end control `Point` of the last (cubic) `Segment`
 - `[x, y]` is the end position `Point` of the last (cubic) `Segment`
@@ -78,7 +84,7 @@ The result of this behavior is that:
 - if a command type `s|S` follows a command of the same "parent" type, ie. a cubic bézier curve, it will get its path slightly shifted as its start control `Point` will reflect the previous end control `Point` instead of being "null", ie. at the previous end position `Point`
 - if a command type `t|T` doesn't follow a command of the same "parent" type, ie. a quadratic bezier curve, it will be rendered flat as it will only have its end position `Point`, which is not enough to draw a curve
 
-Another fact is that a `s|S` command type is usable independently but `t|T` is not.
+Another fact is that a `s|S` command type can be used alone but not `t|T`.
 
 Heuristic facts:
 
