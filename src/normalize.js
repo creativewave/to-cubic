@@ -186,8 +186,8 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
  * Point => { [Parameter]: Number }
  *
  * It should return a `Definition` containing its first `Command` (type `M`), a
- * `C`ubic `Command` resulting from the transformation of its initial drawing
- * `Command`s (of any type), and a `Command` with a type `z`.
+ * single `C`ubic `Command` resulting from the normalization of the drawing
+ * `Command`s (of any type), and its last `Command` of type `z` if any.
  *
  * It should append any line `Command` implicitly closing the path, eg.:
  *   M 0 0, H 1, V 1, z  ->  M 0 0, H 1, V 1, L 0 0, z
@@ -226,13 +226,13 @@ export const normalizeCommands = ([startCommand, ...drawCommands]) => {
  * It should return a collection of `Definition`s with the same `Command` type
  * at respective indexes.
  *
- * The first `Command` is presumed to have a type `M` and a single `Point`.
- * The last `Command` is presumed to have a type `z` and no `Point`.
- *
  * Memo: the most efficient way to fullfill those requirements is to normalize
  * each `Command` to a single `C`ubic `Command` first (except the last and first
  * `Command`), then normalize each `Definition` to get the same `Point`s count,
  * which is the method followed by GreenSock morphSVG (https://greensock.com/).
+ *
+ * Memo: the first `Command` is presumed to be of type `M` and to contain a
+ * single `Point`.
  */
 const normalize = definitions => {
     // Step 1 (normalize types) + find max point counts (step 2)

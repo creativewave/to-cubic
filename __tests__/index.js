@@ -579,6 +579,26 @@ describe('definition#normalize()', () => {
 
         expect(actual).toEqual(expected)
     })
+    it('should normalize a <path> definition that is not closed', () => {
+
+        const actual = normalizeCommands([commands.M.parsed, commands.L.parsed])
+        const expected = [
+            commands.M.normalized,
+            {
+                points: [
+                    { x: 0, y: 2 },
+                    { x: 4, y: 0 },
+                    { x: 4, y: 0 },
+                    { x: 4, y: 0 },
+                    { x: 4, y: 4 },
+                    { x: 4, y: 4 },
+                ],
+                type: 'C',
+            },
+        ]
+
+        expect(actual).toEqual(expected)
+    })
     it('should normalize a collection of <path> definitions', () => {
 
         const actual = normalize(Object.values(shapes).map(shape => shape.parsed))
@@ -592,7 +612,7 @@ describe('definition#normalize()', () => {
 })
 
 describe('definition#serialize()', () => {
-    it('should return a definition String given a definition [Command]', () => {
+    it('should serialize a normalized <path> definition', () => {
 
         const actual = serializeCommands(shapes.clover.normalized)
         const expected = 'M8 5C9.32 4.22 9.3 2.29 7.96 1.54 6.73 0.85 5.2 1.61 5 3 5 1.46 3.33 0.5 2 1.27 0.67 2.04 0.67 3.96 2 4.73 2.3 4.91 2.65 5 3 5 0.82 4.23-1.37 6.11-0.94 8.38-0.52 10.65 2.21 11.61 3.96 10.11 4.58 9.58 4.95 8.81 5 8 6.15 9.15 8.13 8.63 8.55 7.05 8.75 6.32 8.54 5.54 8 5z'
