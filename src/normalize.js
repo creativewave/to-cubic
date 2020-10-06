@@ -6,7 +6,7 @@ import last from './lib/last'
 import mapValues from './lib/mapValues'
 
 /**
- * normalizePoints :: Number -> Definition -> Definition
+ * normalizeCounts :: Number -> Definition -> Definition
  *
  * Definition => [Command]
  * Command => { type: String, points: [Point] }
@@ -19,7 +19,7 @@ import mapValues from './lib/mapValues'
  *
  * It should clone a `Point` using the last position `Point`: x x a  ->  a a a.
  */
-export const normalizePoints = minPoints => definition => {
+export const normalizeCounts = minPoints => definition => {
 
     const [startCommand, drawCommand, endCommand] = definition
 
@@ -250,7 +250,7 @@ const normalize = definitions => {
         },
         { definitions: [], minPoints: 0 })
     // Step 2 (normalize point counts)
-    return normalized.map(normalizePoints(minPoints))
+    return normalized.map(normalizeCounts(minPoints))
 }
 
 export default normalize
