@@ -53,7 +53,7 @@ export const normalizePoints = minPoints => definition => {
 }
 
 /**
- * normalizeCommand :: Group -> [...Point] -> Command -> [...Point]
+ * normalizeType :: Point -> [Point] -> Command -> [Point]
  *
  * Definition => [Command]
  * Command => { type: String, points: [Point] }
@@ -64,7 +64,7 @@ export const normalizePoints = minPoints => definition => {
  *
  * Memo: each transformation are specified in ./README.md by `Command` type.
  */
-export const normalizeCommand = startPoint => (points, command, commandIndex, commands) => {
+export const normalizeType = startPoint => (points, command, commandIndex, commands) => {
 
     if (command.type === 'C') {
         points.push(...command.points.map(point => mapValues(point, Number)))
@@ -183,7 +183,7 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
 }
 
 /**
- * normalizeCommands :: Definition -> Definition
+ * normalizeTypes :: Definition -> Definition
  *
  * Definition => [Command]
  * Command => { type: String, points: [Point] }
@@ -196,14 +196,14 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
  * It should append any line `Command` implicitly closing the path, eg.:
  *   M 0 0, H 1, V 1, z  ->  M 0 0, H 1, V 1, L 0 0, z
  */
-export const normalizeCommands = ([startCommand, ...drawCommands]) => {
+export const normalizeTypes = ([startCommand, ...drawCommands]) => {
 
     const startPoint = mapValues(startCommand.points[0], Number)
     const commands = [{ points: [startPoint], type: 'M' }]
 
     if (last(drawCommands).type === 'z') {
 
-        const drawPoints = drawCommands.slice(0, -1).reduce(normalizeCommand(startPoint), [])
+        const drawPoints = drawCommands.slice(0, -1).reduce(normalizeType(startPoint), [])
         const lastPoint = last(drawPoints)
 
         if (lastPoint.x !== startPoint.x || lastPoint.y !== startPoint.y) {
@@ -212,7 +212,7 @@ export const normalizeCommands = ([startCommand, ...drawCommands]) => {
 
         commands.push({ points: drawPoints, type: 'C' }, { points: [], type: 'z' })
     } else {
-        commands.push({ points: drawCommands.reduce(normalizeCommand(startPoint), []), type: 'C' })
+        commands.push({ points: drawCommands.reduce(normalizeType(startPoint), []), type: 'C' })
     }
 
     return commands
@@ -241,7 +241,7 @@ const normalize = definitions => {
     // Step 1 (normalize types) + find max point counts (step 2)
     const { definitions: normalized, minPoints } = definitions.reduce(
         ({ definitions, minPoints }, definition) => {
-            const normalized = normalizeCommands(definition)
+            const normalized = normalizeTypes(definition)
             if (normalized[1].points.length > minPoints) {
                 minPoints = normalized[1].points.length
             }

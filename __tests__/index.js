@@ -1,7 +1,7 @@
 
 // eslint-disable-next-line node/no-extraneous-import
 import { describe, expect, it } from '@jest/globals'
-import normalize, { normalizeCommands } from '../src/normalize'
+import normalize, { normalizeTypes } from '../src/normalize'
 import { parseDefinition } from '../src/parse'
 import { serializeCommands } from '../src/serialize'
 
@@ -408,14 +408,14 @@ describe('definition#parse()', () => {
 describe('definition#normalize()', () => {
     it('should normalize command type L -> C', () => {
 
-        const actual = normalizeCommands([commands.M.parsed, commands.L.parsed, commands.z.parsed])
+        const actual = normalizeTypes([commands.M.parsed, commands.L.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.L.normalized, commands.z.normalized]
 
         expect(actual).toEqual(expected)
     })
     it('should normalize command type l -> C', () => {
 
-        const actual = normalizeCommands([
+        const actual = normalizeTypes([
             commands.M.parsed,
             { points: [{ x: '4', y: '-2' }, { x: '0', y: '4' }], type: 'l' },
             commands.z.parsed,
@@ -426,14 +426,14 @@ describe('definition#normalize()', () => {
     })
     it('should normalize command type H -> C', () => {
 
-        const actual = normalizeCommands([commands.M.parsed, commands.H.parsed, commands.z.parsed])
+        const actual = normalizeTypes([commands.M.parsed, commands.H.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.H.normalized, commands.z.normalized]
 
         expect(actual).toEqual(expected)
     })
     it('should normalize command type h -> C', () => {
 
-        const actual = normalizeCommands([
+        const actual = normalizeTypes([
             commands.M.parsed,
             { points: [{ x: '2' }, { x: '2' }], type: 'h' },
             commands.z.parsed,
@@ -444,14 +444,14 @@ describe('definition#normalize()', () => {
     })
     it('should normalize command type V -> C', () => {
 
-        const actual = normalizeCommands([commands.M.parsed, commands.V.parsed, commands.z.parsed])
+        const actual = normalizeTypes([commands.M.parsed, commands.V.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.V.normalized, commands.z.normalized]
 
         expect(actual).toEqual(expected)
     })
     it('should normalize command type v -> C', () => {
 
-        const actual = normalizeCommands([
+        const actual = normalizeTypes([
             commands.M.parsed,
             { points: [{ y: '1' }, { y: '1' }], type: 'v' },
             commands.z.parsed,
@@ -462,7 +462,7 @@ describe('definition#normalize()', () => {
     })
     it('should normalize command type c -> C', () => {
 
-        const actual = normalizeCommands([
+        const actual = normalizeTypes([
             commands.M.parsed,
             {
                 points: [
@@ -483,14 +483,14 @@ describe('definition#normalize()', () => {
     })
     it('should normalize command type S -> C', () => {
 
-        const actual = normalizeCommands([commands.M.parsed, commands.S.parsed, commands.z.parsed])
+        const actual = normalizeTypes([commands.M.parsed, commands.S.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.S.normalized, commands.z.normalized]
 
         expect(actual).toEqual(expected)
     })
     it('should normalize command type s -> C', () => {
 
-        const actual = normalizeCommands([
+        const actual = normalizeTypes([
             commands.M.parsed,
             { points: [{ x: '0', y: '-2' }, { x: '2', y: '-2' }, { x: '2', y: '2' }, { x: '2', y: '2' }], type: 's' },
             commands.z.parsed,
@@ -501,14 +501,14 @@ describe('definition#normalize()', () => {
     })
     it('should normalize command type Q -> C', () => {
 
-        const actual = normalizeCommands([commands.M.parsed, commands.Q.parsed, commands.z.parsed])
+        const actual = normalizeTypes([commands.M.parsed, commands.Q.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.Q.normalized, commands.z.normalized]
 
         expect(actual).toEqual(expected)
     })
     it('should normalize command type q -> C', () => {
 
-        const actual = normalizeCommands([
+        const actual = normalizeTypes([
             commands.M.parsed,
             { points: [{ x: '1', y: '-2' }, { x: '2', y: '0' }, { x: '1', y: '-2' }, { x: '2', y: '0' }], type: 'q' },
             commands.z.parsed,
@@ -519,7 +519,7 @@ describe('definition#normalize()', () => {
     })
     it('should normalize command type T -> C', () => {
 
-        const actual = normalizeCommands([
+        const actual = normalizeTypes([
             commands.M.parsed,
             { points: commands.Q.parsed.points.slice(0, 2), type: 'Q' },
             commands.T.parsed,
@@ -531,7 +531,7 @@ describe('definition#normalize()', () => {
     })
     it('should normalize command type t -> C', () => {
 
-        const actual = normalizeCommands([
+        const actual = normalizeTypes([
             commands.M.parsed,
             { points: commands.Q.parsed.points.slice(0, 2), type: 'Q' },
             { points: [{ x: '2', y: '0' }, { x: '2', y: '0' }], type: 't' },
@@ -543,14 +543,14 @@ describe('definition#normalize()', () => {
     })
     it('should normalize command type A -> C', () => {
 
-        const actual = normalizeCommands([commands.M.parsed, commands.A.parsed, commands.z.parsed])
+        const actual = normalizeTypes([commands.M.parsed, commands.A.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.A.normalized, commands.z.normalized]
 
         expect(actual).toEqual(expected)
     })
     it('should normalize command type a -> C', () => {
 
-        const actual = normalizeCommands([
+        const actual = normalizeTypes([
             commands.M.parsed,
             {
                 points: [
@@ -567,21 +567,21 @@ describe('definition#normalize()', () => {
     })
     it('should normalize a <path> definition', () => {
 
-        const actual = normalizeCommands(shapes.clover.parsed)
+        const actual = normalizeTypes(shapes.clover.parsed)
         const expected = shapes.clover.normalized
 
         expect(actual).toEqual(expected)
     })
     it('should normalize a <path> definition closing with an implicit line command', () => {
 
-        const actual = normalizeCommands(shapes.triangle.parsed)
+        const actual = normalizeTypes(shapes.triangle.parsed)
         const expected = shapes.triangle.explicited
 
         expect(actual).toEqual(expected)
     })
     it('should normalize a <path> definition that is not closed', () => {
 
-        const actual = normalizeCommands([commands.M.parsed, commands.L.parsed])
+        const actual = normalizeTypes([commands.M.parsed, commands.L.parsed])
         const expected = [
             commands.M.normalized,
             {
