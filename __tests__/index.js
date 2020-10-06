@@ -3,6 +3,7 @@
 import { describe, expect, it } from '@jest/globals'
 import normalize, { normalizeTypes } from '../src/normalize'
 import { parseDefinition } from '../src/parse'
+import round from '../src/lib/round'
 import { serializeCommands } from '../src/serialize'
 
 /**
@@ -325,6 +326,14 @@ const shapes = {
 }
 /* eslint-enable array-element-newline */
 
+/**
+ * roundCommandPoints :: [Point] -> [Point]
+ *
+ * Memo: it exists to round parameters from arc command points normalized to
+ * cubic command points, since rounding is now run only while serializing.
+ */
+const roundActualPoints = points => points.map(({ x, y }) => ({ x: round(2, x), y: round(2, y) }))
+
 describe('definition#parse()', () => {
     it('should parse a command type L', () => {
 
@@ -546,6 +555,8 @@ describe('definition#normalize()', () => {
         const actual = normalizeTypes([commands.M.parsed, commands.A.parsed, commands.z.parsed])
         const expected = [commands.M.normalized, commands.A.normalized, commands.z.normalized]
 
+        actual[1].points = roundActualPoints(actual[1].points)
+
         expect(actual).toEqual(expected)
     })
     it('should normalize command type a -> C', () => {
@@ -563,12 +574,16 @@ describe('definition#normalize()', () => {
         ])
         const expected = [commands.M.normalized, commands.A.normalized, commands.z.normalized]
 
+        actual[1].points = roundActualPoints(actual[1].points)
+
         expect(actual).toEqual(expected)
     })
     it('should normalize a <path> definition', () => {
 
         const actual = normalizeTypes(shapes.clover.parsed)
         const expected = shapes.clover.normalized
+
+        actual[1].points = roundActualPoints(actual[1].points)
 
         expect(actual).toEqual(expected)
     })
@@ -604,6 +619,7 @@ describe('definition#normalize()', () => {
         const actual = normalize(Object.values(shapes).map(shape => shape.parsed))
 
         Object.keys(shapes).forEach((name, shape) => {
+            actual[shape][1].points = roundActualPoints(actual[shape][1].points)
             expect(actual[shape]).toEqual(shapes[name].normalized)
             expect(actual[shape][1].points).toHaveLength(shapes[name].normalized[1].points.length)
         })
@@ -614,7 +630,7 @@ describe('definition#normalize()', () => {
 describe('definition#serialize()', () => {
     it('should serialize a normalized <path> definition', () => {
 
-        const actual = serializeCommands(shapes.clover.normalized)
+        const actual = serializeCommands(2)(shapes.clover.normalized)
         const expected = 'M8 5C9.32 4.22 9.3 2.29 7.96 1.54 6.73 0.85 5.2 1.61 5 3 5 1.46 3.33 0.5 2 1.27 0.67 2.04 0.67 3.96 2 4.73 2.3 4.91 2.65 5 3 5 0.82 4.23-1.37 6.11-0.94 8.38-0.52 10.65 2.21 11.61 3.96 10.11 4.58 9.58 4.95 8.81 5 8 6.15 9.15 8.13 8.63 8.55 7.05 8.75 6.32 8.54 5.54 8 5z'
 
         expect(actual).toEqual(expected)

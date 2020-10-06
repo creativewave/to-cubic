@@ -1,9 +1,11 @@
 
+import round from './lib/round'
+
 /**
- * getFormattedPoint :: (Point -> Boolean) -> String
+ * getFormattedPoint :: (Point -> Number|void -> Boolean) -> String
  */
-const getFormattedPoint = ({ x, y }, isFirstPoint = false) =>
-    `${(x < 0 || isFirstPoint) ? '' : ' '}${x}${y < 0 ? '' : ' '}${y}`
+const getFormattedPoint = ({ x, y }, precision, isFirstPoint) =>
+    `${(x < 0 || isFirstPoint) ? '' : ' '}${round(precision, x)}${y < 0 ? '' : ' '}${round(precision, y)}`
 
 /**
  * serializeCommand :: Definition -> String
@@ -12,17 +14,17 @@ const getFormattedPoint = ({ x, y }, isFirstPoint = false) =>
  * Command => { type: String, points: [Point] }
  * Point => { [Parameter]: Number }
  */
-export const serializeCommands = commands => commands
+export const serializeCommands = precision => commands => commands
     .slice(1)
     .reduce(
         (d, { type, points }) => `${d}${type}${points.reduce(
-            (segment, point, index) => `${segment}${getFormattedPoint(point, index === 0)}`,
+            (segment, point, index) => `${segment}${getFormattedPoint(point, precision, index === 0)}`,
             '')}`,
-        `M${getFormattedPoint(commands[0].points[0], true)}`)
+        `M${getFormattedPoint(commands[0].points[0], precision, true)}`)
 
 /**
  * serialize :: [Definition] -> [String]
  */
-const serialize = definitions => definitions.map(serializeCommands)
+const serialize = (definitions, precision) => definitions.map(serializeCommands(precision))
 
 export default serialize

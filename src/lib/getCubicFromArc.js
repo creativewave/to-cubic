@@ -1,6 +1,4 @@
 
-import round from './round'
-
 /**
  * Implementation based from SVGO (based from Snap.svg, based from the spec)
  * https://github.com/svg/svgo/blob/master/plugins/_path.js#L904
@@ -218,10 +216,10 @@ const getCubicFromArc = ({ x: x1, y: y1 }, { angle, fA, fS, recursive, rx, ry, x
     return firstCubicPoints.concat(nextCubicPoints).reduce(
         (cubicPoints, parameter, index, parameters) => {
             if (index % 2) {
-                cubicPoints[cubicPoints.length - 1].y = round(2, rotateY(parameters[index - 1], parameter, phi))
+                cubicPoints[cubicPoints.length - 1].y = rotateY(parameters[index - 1], parameter, phi)
                 return cubicPoints
             }
-            cubicPoints.push({ x: round(2, rotateX(parameter, parameters[index + 1], phi)) })
+            cubicPoints.push({ x: rotateX(parameter, parameters[index + 1], phi) })
             return cubicPoints
         },
         [])
