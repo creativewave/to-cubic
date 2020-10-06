@@ -38,7 +38,7 @@ All command types are supported – `m`, `l`, `h`, `v`, `s`, `c`, `q`, `t`, `a`,
 **With npx (LTS or current NodeJS version):**
 
 ```shell
-npx to-cubic <input.(c|m)?js> [output.txt]
+npx to-cubic [-r|--round <precision>] <input.(c|m)?js> [output.txt]
 ```
 
 Depending on its extension (and/or your `package.json`), the first argument should be a path to an input file that exports your path defintions, either as an ES or a CommonJS module:
@@ -62,10 +62,11 @@ M...
     // Or (CommonJS): const toCubic = require('@cdoublev/to-cubic')
 
     const path = document.getElementById('my-path')
+    const precision = 4
     const [from, to] = toCubic([
         'M0 0h10v10H0z',
         'M5 0A5 5 0 0 0 10 5A5 5 0 0 0 5 10A5 5 0 0 0 0 5A5 5 0 0 0 5 0z',
-    ])
+    ], 4)
 
     // Animate from square to circle in 2s (using the Web Animation API)
     path.animate({ d: [`path('${from}')`, `path('${to}')`] }, 2000)
