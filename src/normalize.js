@@ -45,7 +45,11 @@ export const normalizePoints = minPoints => definition => {
             [startControl, endControl])
     }
 
-    return [startCommand, drawCommand, endCommand]
+    if (endCommand) {
+        return [startCommand, drawCommand, endCommand]
+    }
+
+    return [startCommand, drawCommand]
 }
 
 /**
@@ -194,23 +198,22 @@ export const normalizeCommand = startPoint => (points, command, commandIndex, co
  */
 export const normalizeCommands = ([startCommand, ...drawCommands]) => {
 
-    const commands = []
     const startPoint = mapValues(startCommand.points[0], Number)
+    const commands = [{ points: [startPoint], type: 'M' }]
 
-    if (last(drawCommands).type !== 'z') {
-        drawCommands.push({ points: [], type: 'z' })
+    if (last(drawCommands).type === 'z') {
+
+        const drawPoints = drawCommands.slice(0, -1).reduce(normalizeCommand(startPoint), [])
+        const lastPoint = last(drawPoints)
+
+        if (lastPoint.x !== startPoint.x || lastPoint.y !== startPoint.y) {
+            drawPoints.push(lastPoint, startPoint, startPoint)
+        }
+
+        commands.push({ points: drawPoints, type: 'C' }, { points: [], type: 'z' })
+    } else {
+        commands.push({ points: drawCommands.reduce(normalizeCommand(startPoint), []), type: 'C' })
     }
-
-    const drawPoints = drawCommands.slice(0, -1).reduce(normalizeCommand(startPoint), [])
-    const lastPoint = last(drawPoints)
-
-    if (lastPoint.x !== startPoint.x || lastPoint.y !== startPoint.y) {
-        drawPoints.push(lastPoint, startPoint, startPoint)
-    }
-
-    commands.push({ points: [startPoint], type: 'M' })
-    commands.push({ points: drawPoints, type: 'C' })
-    commands.push({ points: [], type: 'z' })
 
     return commands
 }

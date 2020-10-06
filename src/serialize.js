@@ -1,5 +1,11 @@
 
 /**
+ * getFormattedPoint :: (Point -> Boolean) -> String
+ */
+const getFormattedPoint = ({ x, y }, isFirstPoint = false) =>
+    `${(x < 0 || isFirstPoint) ? '' : ' '}${x}${y < 0 ? '' : ' '}${y}`
+
+/**
  * serializeCommand :: Definition -> String
  *
  * Definition => [Command]
@@ -7,15 +13,12 @@
  * Point => { [Parameter]: Number }
  */
 export const serializeCommands = commands => commands
-    .slice(0, -1)
-    .reduce((d, { type, points }) => {
-        const firstPoint = `${points[0].x}${points[0].y < 0 ? '' : ' '}${points[0].y}`
-        return `${d}${type}${points.slice(1).reduce(
-            (point, { x, y }) =>
-                `${point}${x < 0 ? '' : ' '}${x}${y < 0 ? '' : ' '}${y}`,
-            `${firstPoint}`)}`
-    }, '')
-    .concat('z')
+    .slice(1)
+    .reduce(
+        (d, { type, points }) => `${d}${type}${points.reduce(
+            (segment, point, index) => `${segment}${getFormattedPoint(point, index === 0)}`,
+            '')}`,
+        `M${getFormattedPoint(commands[0].points[0], true)}`)
 
 /**
  * serialize :: [Definition] -> [String]
