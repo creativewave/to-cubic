@@ -33,7 +33,7 @@ const commands = {
             ],
             type: 'A',
         },
-        raw: 'A2 2 0 10 4 2 2 2 0 1 0 0 2',
+        raw: 'A2 2 0 1 0 4 2 2 2 0 1 0 0 2',
     },
     C: {
         normalized: {
@@ -390,6 +390,16 @@ describe('definition#parse()', () => {
         const expected = [commands.A.parsed]
 
         expect(actual).toEqual(expected)
+
+        // Implicit space after arc flags
+        expect(parseDefinition(/*M2 1*/'A1 1 0 000 1'))
+            .toEqual([{ points: [{ angle: '0', fA: '0', fS: '0', rx: '1', ry: '1', x: '0', y: '1' }], type: 'A' }])
+        expect(parseDefinition(/*M2 1*/'A1 1 0 100 1'))
+            .toEqual([{ points: [{ angle: '0', fA: '1', fS: '0', rx: '1', ry: '1', x: '0', y: '1' }], type: 'A' }])
+        expect(parseDefinition(/*M2 1*/'A1 1 0 010 1'))
+            .toEqual([{ points: [{ angle: '0', fA: '0', fS: '1', rx: '1', ry: '1', x: '0', y: '1' }], type: 'A' }])
+        expect(parseDefinition(/*M2 1*/'A1 1 0 110 1'))
+            .toEqual([{ points: [{ angle: '0', fA: '1', fS: '1', rx: '1', ry: '1', x: '0', y: '1' }], type: 'A' }])
     })
     it('should parse a <path> definition', () => {
 
