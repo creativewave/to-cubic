@@ -40,9 +40,7 @@ export const parseDefinition = definition => {
                     } else if (char === '.' && point[Params[currentParamIndex]].includes('.')) {
                         isNewParamChar = true
                         char = '0.'
-                    } else if (
-                        command.type.toLowerCase() === 'a'
-                        && (char === '0' || char === '1')
+                    } else if (command.type.toLowerCase() === 'a'
                         && (currentParamIndex === 3 || currentParamIndex === 4)) {
                         isNewParamChar = true
                     }
