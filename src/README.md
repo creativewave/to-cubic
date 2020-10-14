@@ -4,25 +4,27 @@
 
 # Types and terminology
 
-`Command => { type: String, points: [Point] }`
-`Point => { [Parameter]: Number }`
-`Segment => ...Point`
+```
+Command => { type: String, points: [Point] }
+Point => { [Parameter]: Number }
+Segment => ...Point
+```
 
-Note: `Segment` is not a concrete sequence type like `[Point]`, ie. it is only a conceptual type.
+Note: `Segment` is not a concrete sequence type like `[Point]`.
 
 **Command:** a definition of movement(s) on the SVG canvas.
 
 **Command type:** a letter for the command type, eg. `m`oving at a position, drawing a `l`ine or a `c`urve, or closing the path with `z`.
 
-**Command segment:** a sequence of command points describing a single movement to an end point.
+**Command segment:** a sequence of command points describing a single movement/drawing from the endpoint of the previous segment to the endpoint of the current segment.
 
-**Command point:** a map of parameters, eg. `{ x: Number, y: Number }`.
+**Command point:** a map of parameters, eg. `{ x: Number, y: Number }` for a `L`ine command.
 
 # Transforming a command segment to a cubic command segment
 
 Below is a list of `Segment` definitions sorted by `Command` type.
 
-Note: for clarity purpose, the type of a `Point` is replaced with `Point => [Number]`.
+Note: for clarity purpose, the type of a `Point` is replaced by `Point => [Number]`.
 
 | Type  | Segment                            |
 | ----- | ---------------------------------- |
@@ -44,10 +46,10 @@ Note: for clarity purpose, the type of a `Point` is replaced with `Point => [Num
 
 Below is a list of transformations for each `Segment` by command type.
 
-For clarity purpose, `P`revious is an alias to the previous segment whose conceptual type is `Segment => [x1, y1], [x2, y2], [x, y]`, where:
+For clarity purpose, `P`revious is used for the type of the previous cubic commmand segment, `Segment => [x1, y1], [x2, y2], [x, y]`, where:
 
-- `[x2, y2]` is the end control `Point` of the last (cubic) `Segment`
-- `[x, y]` is the end position `Point` of the last (cubic) `Segment`
+- `[x2, y2]` is its end control `Point`
+- `[x, y]` is its end position `Point`
 
 | Type  | Transformation from [P, Segment[Type]] to [P, Segment.C]              |
 | ----- | --------------------------------------------------------------------- |
@@ -67,28 +69,11 @@ For clarity purpose, `P`revious is an alias to the previous segment whose concep
 | **A** | [P, [?], [?], [Ax, Ay]]                                               |
 | **a** | [P, [?], [?], [ax + x, ay + y]]                                       |
 
-**(*) Special case:** consecutive segments from command types `s|S` or `t|T` should use the previous end position `Point` as their start control `Point` if the last segment is not a cubic or quadratic command, respectively. Otherwhise, its start control `Point` should be a reflection of the previous end control `Point` by using the previous end position `Point` as the anchor point of a symetric transformation:
+**(*) Special case:** the start control `Point` of `s|S` or `t|T` command segments should be defined with the previous end position `Point`, `[x, y]`, if the previous segment was not a cubic (`s|S|c|C`) or quadratic (`q|Q|t|T`) command segment, respectively, otherwhise it should be a reflection of the previous end control `Point`, using the previous end position `Point` as the anchor point of a symetric transformation:
 
-| Type  | Transformation from [P, Segment[Type]] to [P, Segment.C] |
-| ----- | -------------------------------------------------------- |
-| **S** | [P, [x * 2 - x2, y * 2 - y2], ...                        |
-| **s** | [P, [x * 2 - x2, y * 2 - y2], ...                        |
-| **T** | [P, [x * 2 - x2, y * 2 - y2], ...                        |
-| **t** | [P, [x * 2 - x2, y * 2 - y2], ...                        |
+| Type        | Transformation from [P, Segment[Type]] to [P, Segment.C] |
+| ----------- | -------------------------------------------------------- |
+| **S|s|T|t** | [P, [x * 2 - x2, y * 2 - y2], ...                        |
 
-[Specification](https://www.w3.org/TR/SVG11/paths.html#PathDataCubicBezierCommands).
-[Specification](https://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes).
-
-The result of this behavior is that:
-
-- if a command type `s|S` follows a command of the same "parent" type, ie. a cubic bézier curve, it will get its path slightly shifted as its start control `Point` will reflect the previous end control `Point` instead of being "null", ie. at the previous end position `Point`
-- if a command type `t|T` doesn't follow a command of the same "parent" type, ie. a quadratic bezier curve, it will be rendered flat as it will only have its end position `Point`, which is not enough to draw a curve
-
-Another fact is that a `s|S` command type can be used alone but not `t|T`.
-
-Heuristic facts:
-
-- total of transformed types: 15
-- types using [x, y] for their start control `Point`: 8/15 (uppercase or lowercase l, h, v, s*, t*)
-- types using [draw.x ? draw.x + x : x, draw.y ? draw.y + y : y] for their end control `Point`: 5/15 (l, h, v, s, c)
-- types using [draw.x + x, draw.y + y] for their end position `Point`: 6/15 (l, h, v, s, c, a)
+- [Specification](https://www.w3.org/TR/SVG11/paths.html#PathDataCubicBezierCommands).
+- [Specification](https://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes).
