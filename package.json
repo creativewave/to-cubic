@@ -15,7 +15,7 @@
   "repository": "github:creativewave/to-cubic",
   "bin": "./bin/index.js",
   "directories": {
-    "test": "test"
+    "test": "__tests__"
   },
   "files": [
     "bin",
