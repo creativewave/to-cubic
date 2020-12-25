@@ -8,7 +8,7 @@
   ],
   "version": "0.2.2",
   "engines": {
-    "node": ">= 12"
+    "node": ">= 14"
   },
   "homepage": "https://github.com/creativewave/to-cubic#readme",
   "bugs": "https://github.com/creativewave/to-cubic/issues",
