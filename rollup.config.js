@@ -1,5 +1,5 @@
 
-import babel from 'rollup-plugin-babel'
+import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import pkg from './package.json'
@@ -9,6 +9,7 @@ const externalRegexp = new RegExp(`^(${Object.keys(pkg.dependencies).join('|')})
 const external = id => externalRegexp.test(id)
 
 const getBabelConfig = targets => ({
+    babelHelpers: 'bundled',
     exclude: /node_modules/,
     presets: [['@babel/preset-env', {
         corejs: 3,
