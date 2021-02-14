@@ -2,54 +2,20 @@
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
-import pkg from './package.json'
 import { terser } from 'rollup-plugin-terser'
+import { unpkg } from './package.json'
 
-const externalRegexp = new RegExp(`^(${Object.keys(pkg.dependencies).join('|')})`)
-const external = id => externalRegexp.test(id)
-
-const getBabelConfig = targets => ({
-    babelHelpers: 'bundled',
-    exclude: /node_modules/,
-    presets: [['@babel/preset-env', {
-        corejs: 3,
-        // debug: true,
-        targets,
-        useBuiltIns: 'usage',
-    }]]
-})
-
-export default [
-    {
-        external,
-        input: 'src/index.js',
-        output: {
-            file: pkg.main,
-            format: 'cjs',
-        },
-        plugins: [babel(getBabelConfig({ node: true }))],
+export default {
+    input: 'src/index.js',
+    output: {
+        file: unpkg,
+        format: 'umd',
+        name: 'toCubic',
     },
-    {
-        external,
-        input: 'src/index.js',
-        output: {
-            file: pkg.module,
-            format: 'es',
-        },
-        plugins: [babel(getBabelConfig({ esmodules: true }))],
-    },
-    {
-        input: 'src/index.js',
-        output: {
-            file: pkg.unpkg,
-            format: 'umd',
-            name: 'toCubic',
-        },
-        plugins: [
-            nodeResolve(),
-            babel(getBabelConfig('defaults')),
-            commonjs(),
-            terser(),
-        ],
-    },
-]
+    plugins: [
+        nodeResolve(),
+        commonjs(),
+        babel({ babelHelpers: 'bundled' }),
+        terser(),
+    ],
+}

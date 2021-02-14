@@ -1,6 +1,6 @@
 
-import normalize from './normalize'
-import parse from './parse'
-import serialize from './serialize'
+import normalize from './normalize.js'
+import parse from './parse.js'
+import serialize from './serialize.js'
 
 export default (definitions, precision) => serialize(normalize(parse(definitions)), precision)

@@ -1,10 +1,10 @@
 
 // eslint-disable-next-line node/no-extraneous-import
 import { describe, expect, it } from '@jest/globals'
-import normalize, { normalizeTypes } from '../src/normalize'
-import { parseDefinition } from '../src/parse'
-import round from '../src/lib/round'
-import { serializeCommands } from '../src/serialize'
+import normalize, { normalizeTypes } from '../src/normalize.js'
+import { parseDefinition } from '../src/parse.js'
+import round from '../src/lib/round.js'
+import { serializeCommands } from '../src/serialize.js'
 
 /**
  * Debug all command types with:
