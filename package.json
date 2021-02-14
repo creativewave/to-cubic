@@ -13,9 +13,7 @@
   "homepage": "https://github.com/creativewave/to-cubic#readme",
   "bugs": "https://github.com/creativewave/to-cubic/issues",
   "repository": "github:creativewave/to-cubic",
-  "bin": {
-    "to-cubic": "bin/index.js"
-  },
+  "bin": "bin/index.js",
   "directories": {
     "test": "__tests__"
   },
