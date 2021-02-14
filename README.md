@@ -29,6 +29,8 @@ All command types are supported – `m`, `l`, `h`, `v`, `s`, `c`, `q`, `t`, `a`,
   npm i @cdoublev/to-cubic
 ```
 
+`@cdoublev/to-cubic` supports the current NodeJS version as target, meaning that it should probably be transpiled when used in an application, to support its own targets.
+
 ## Usage
 
 **With npx (LTS or current NodeJS version):**
