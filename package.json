@@ -6,14 +6,16 @@
   "keywords": [
     "svg"
   ],
-  "version": "0.2.4",
+  "version": "0.2.5",
   "engines": {
     "node": ">= 14"
   },
   "homepage": "https://github.com/creativewave/to-cubic#readme",
   "bugs": "https://github.com/creativewave/to-cubic/issues",
   "repository": "github:creativewave/to-cubic",
-  "bin": "bin/index.js",
+  "bin": {
+    "to-cubic": "bin/index.js"
+  },
   "directories": {
     "test": "__tests__"
   },
