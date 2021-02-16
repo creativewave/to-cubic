@@ -29,7 +29,7 @@ All command types are supported – `m`, `l`, `h`, `v`, `s`, `c`, `q`, `t`, `a`,
   npm i @cdoublev/to-cubic
 ```
 
-`@cdoublev/to-cubic` supports the current NodeJS version as target, meaning that it should probably be transpiled when used in an application, to support its own targets.
+`@cdoublev/to-cubic` is built with the current NodeJS version as target, meaning that it should probably be transpiled in order to be used in your application using its own targets.
 
 ## Usage
 
@@ -39,7 +39,7 @@ All command types are supported – `m`, `l`, `h`, `v`, `s`, `c`, `q`, `t`, `a`,
 npx to-cubic [-r|--round <precision>] <input.(c|m)?js> [output.txt]
 ```
 
-The input should be a JavaScript module file (ES or CommonJS) whose default export is your path defintions contained in an array. The result will be forwarded to the standard output, or saved in a file whose path is provided as the second argument.
+The input should be an ECMAScript/CommonJS module whose default/main export is an array containing your path definitions. The result will be forwarded to the standard output, or saved in a file whose path is provided as the second argument.
 
 **With import/require:**
 
