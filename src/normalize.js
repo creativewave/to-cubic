@@ -1,9 +1,9 @@
 
-import Maybe from './lib/Maybe.js'
+import Maybe from './utils/Maybe.js'
 import { Segment } from './types.js'
-import getCubicFromArc from './lib/getCubicFromArc.js'
-import last from './lib/last.js'
-import mapValues from './lib/mapValues.js'
+import getCubicFromArc from './utils/getCubicFromArc.js'
+import last from './utils/last.js'
+import mapValues from './utils/mapValues.js'
 
 /**
  * normalizeCounts :: Number -> Definition -> Definition

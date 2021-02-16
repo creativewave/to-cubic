@@ -3,7 +3,7 @@
 import { describe, expect, it } from '@jest/globals'
 import normalize, { normalizeTypes } from '../src/normalize.js'
 import { parseDefinition } from '../src/parse.js'
-import round from '../src/lib/round.js'
+import round from '../src/utils/round.js'
 import { serializeCommands } from '../src/serialize.js'
 
 /**

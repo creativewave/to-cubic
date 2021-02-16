@@ -1,7 +1,7 @@
 
-import Maybe from './lib/Maybe.js'
+import Maybe from './utils/Maybe.js'
 import { Point } from './types.js'
-import last from './lib/last.js'
+import last from './utils/last.js'
 
 /**
  * parseDefinition :: String -> Definition

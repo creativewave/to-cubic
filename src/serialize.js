@@ -1,5 +1,5 @@
 
-import round from './lib/round.js'
+import round from './utils/round.js'
 
 /**
  * getFormattedPoint :: (Point -> Number|void -> Boolean) -> String
