@@ -8,7 +8,7 @@ module.exports = {
         },
         {
             extends: ['@cdoublev/eslint-config/browser'],
-            files: ['src/**/*.js'],
+            files: ['lib/**/*.js'],
             settings: {
                 polyfills: ['Object'],
             },

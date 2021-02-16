@@ -17,23 +17,24 @@
     "to-cubic": "bin/index.js"
   },
   "directories": {
+    "lib": "lib",
     "test": "__tests__"
   },
   "files": [
     "bin",
     "dist",
-    "src"
+    "lib"
   ],
   "type": "module",
   "exports": {
-    ".": "./src/index.js",
+    ".": "./lib/index.js",
     "./package.json": "./package.json"
   },
   "unpkg": "dist/to-cubic.js",
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "rollup -c --environment NODE_ENV:browser",
-    "lint": "eslint src __tests__",
+    "lint": "eslint __tests__ lib",
     "safe-publish": "npm run lint && npm run test && npm run build && npm publish",
     "test": "jest",
     "test:report": "jest -i --reporters='jest-junit'",
