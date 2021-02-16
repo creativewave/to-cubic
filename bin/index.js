@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-'use strict'
-
 import { writeFile } from 'fs'
 import toCubic from '@cdoublev/to-cubic'
 
