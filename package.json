@@ -27,13 +27,18 @@
   ],
   "type": "module",
   "exports": {
-    ".": "./lib/index.js",
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./dist/cjs/index.cjs"
+    },
     "./package.json": "./package.json"
   },
-  "unpkg": "dist/to-cubic.js",
+  "unpkg": "dist/umd/to-cubic.js",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "rollup -c --environment NODE_ENV:browser",
+    "build:cjs": "rollup -c --environment NODE_ENV:cjs",
+    "build:umd": "rollup -c --environment NODE_ENV:umd",
+    "build": "npm run build:umd && npm run build:cjs",
     "lint": "eslint __tests__ lib",
     "safe-publish": "npm run lint && npm run test && npm run build && npm publish",
     "test": "jest",
@@ -45,6 +50,7 @@
     "core-js": "^3.8.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.13.0",
     "@babel/core": "^7.12.16",
     "@babel/plugin-transform-runtime": "^7.12.15",
     "@babel/preset-env": "^7.12.16",
