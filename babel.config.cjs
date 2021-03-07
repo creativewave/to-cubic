@@ -16,11 +16,8 @@ module.exports = api => {
     if (env === 'cjs') {
         plugins.push(['@babel/plugin-transform-runtime', { version: dependencies['@babel/runtime'] }])
     } else if (env === 'umd') {
-        presetEnv.targets = { esmodules: true }
-        return { exclude: /core-js/, plugins, presets }
+        return { exclude: /core-js/, plugins, presets, targets: 'supports es6-module' }
     }
 
-    presetEnv.targets = { node: true }
-
-    return { exclude: /node_modules/, plugins, presets }
+    return { exclude: /node_modules/, plugins, presets, targets: 'current node' }
 }
